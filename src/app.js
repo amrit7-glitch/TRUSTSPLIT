@@ -22,6 +22,8 @@ import userRouter from "./routes/user.route.js";
 // declare router here 
 app.use("/api/v1/users",userRouter)
 
+
+
 // https://localhost:4000/api/v1/users
 
 export default app
