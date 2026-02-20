@@ -9,8 +9,10 @@ const generateAccessAndRefreshToken = async(userId)=>{
     try {
         const user = await User.findById(userId);
     
-        const refreshToken = user?.generateRefreshToken()
-        const accessToken = user?.generateAccessToken()
+        const refreshToken = user.generateRefreshToken()
+        const accessToken = user.generateAccessToken()
+
+        //console.log(refreshToken,"   ",accessToken)
         
         // saving refreshToken into database 
         user.refreshToken = refreshToken
@@ -97,7 +99,7 @@ const loginUser = asyncHandler(async (req,res)=>{
             throw new ApiError(401,"password is not valid")
         }
 
-        const {accessToken,refreshToken} = generateAccessAndRefreshToken(user._id);
+        const {accessToken,refreshToken} = await generateAccessAndRefreshToken(user._id);
 
         const loggedInUser = await User.findById(user._id).select("-password -refreshToken")
 
@@ -108,8 +110,8 @@ const loginUser = asyncHandler(async (req,res)=>{
 
         return res
         .status(200)
-        .cookies("accessToken",accessToken,options)
-        .cookies("refreshToken",refreshToken,options)
+        .cookie("accessToken",accessToken,options)
+        .cookie("refreshToken",refreshToken,options)
         .json(
             new ApiResponse(200,{
                 loggedInUser,accessToken,refreshToken
