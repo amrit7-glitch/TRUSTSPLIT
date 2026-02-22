@@ -10,6 +10,11 @@ const transctionSchema = new Schema({
         type:mongoose.Types.ObjectId,
         ref:"Wallet"
     },
+    type: {
+        type: String,
+        enum: ["deposit","trade","refund","transfer"],
+        required: true
+    },
     status:{
         type:String,
         enum:["pending","sucess","failed"],
@@ -18,6 +23,9 @@ const transctionSchema = new Schema({
     amount:{
         type:Number,
         required:true
+    },
+    paymentId:{
+        type:String
     }
 
 

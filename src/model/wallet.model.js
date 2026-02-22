@@ -7,7 +7,6 @@ const walletSchema = new Schema({
             required:true,
             unique:true,
             trim:true,
-
         },
 
         availableBalance:{
@@ -18,6 +17,11 @@ const walletSchema = new Schema({
         lockedBalance:{
             type:Number,
             dafault:0
+        },
+        type:{
+            type:String,
+            enum:["user","system","escrow"],
+            default:"user"
         }
 },{timestamps:true})
 
