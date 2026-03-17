@@ -11,16 +11,27 @@ app.use(cors(
     }
 ))
 
-app.use(express.json({limit: "16kb"}));
+app.use(
+  express.json({
+    verify: (req, res, buf) => {
+      if (req.originalUrl.startsWith("/api/v1/payment/webhook")) {
+        req.rawBody = buf;
+      }
+    },
+    limit:"16kb"
+  })
+);
 app.use(express.urlencoded({extended: true, limit:"16kb"}));
 app.use(express.static('public'));
 app.use(cookieParser());
 
 // import route here
 import userRouter from "./routes/user.route.js";
+import webhookRouter from "./routes/webhook.route.js"
 
 // declare router here 
 app.use("/api/v1/users",userRouter)
+app.use("/api/v1/payment",webhookRouter)
 
 
 

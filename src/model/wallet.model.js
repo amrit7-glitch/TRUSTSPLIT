@@ -16,7 +16,7 @@ const walletSchema = new Schema({
 
         lockedBalance:{
             type:Number,
-            dafault:0
+            default:0
         },
         type:{
             type:String,

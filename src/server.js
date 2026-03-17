@@ -4,7 +4,7 @@ dotenv.config({ path: './.env' })
 
 import connectDb from "./db/db.user.js";
 import app from "./app.js"
-
+import {initTreasury} from "./utils/systemTreasure.js"
 
 connectDb()
 .then(async ()=>{
@@ -17,7 +17,7 @@ connectDb()
    
 )
 .catch((error)=>{
-        console.log("mongodb connection failed ",error)
+        console.log("mongodb connection failed ",error.message)
 }
 
 )
