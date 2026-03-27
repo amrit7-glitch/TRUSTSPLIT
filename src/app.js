@@ -4,13 +4,25 @@ import cookieParser from "cookie-parser";
 
 const app = express();
 
-app.use(cors(
-    {
-        // origin: process.env.CORS_ORIGIN,
-        origin:true,
-        credentials: true
-    }
-))
+// app.use(cors(
+//     {
+//         // origin: process.env.CORS_ORIGIN,
+//         origin:true,
+//         credentials: true
+//     }
+// ))
+
+const corsOptions = {
+  origin: true,
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"]
+};
+
+app.use(cors(corsOptions));
+
+// 🔥 THIS LINE IS IMPORTANT
+app.options("*", cors(corsOptions));
 
 app.use(
   express.json({
