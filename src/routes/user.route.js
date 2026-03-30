@@ -14,7 +14,7 @@ router.route("/register").post(registerUser)
 
 router.route("/login").post(loginUser)
 
-router.route("/deposit-money").post(createDepositeSession)
+router.route("/deposit-money").post(verifyJWT,createDepositeSession)
 router.route("/webhook").post(stripeWebhook)
 router.route("/get-wallet").get(verifyJWT, getWallet)
 
