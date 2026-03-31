@@ -48,8 +48,8 @@ export const createDepositeSession = asyncHandler(async (req,res)=>{
             amount: amount.toString()
         },
 
-        success_url: `${process.env.CLIENT_URL}/payment-success`,
-        cancel_url: `${process.env.CLIENT_URL}/payment-cancel`,
+        success_url: `${process.env.CLIENT_URL}/?payment=success`,
+        cancel_url: `${process.env.CLIENT_URL}/?payment=cancelled`,
     });
 
     return res
