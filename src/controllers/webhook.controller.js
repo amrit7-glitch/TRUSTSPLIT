@@ -12,7 +12,7 @@ export const stripeWebhook = asyncHandler(async (req, res) => {
   /* ================= VERIFY STRIPE ================= */
   try {
     event = stripe.webhooks.constructEvent(
-      req.rawBody,                        // VERY IMPORTANT
+      req.body,                        // VERY IMPORTANT
       signature,
       process.env.STRIPE_SIGNING_SCERET
     );
