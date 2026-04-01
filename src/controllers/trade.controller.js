@@ -22,12 +22,12 @@ export const buyStock = asyncHandler(async (req, res) => {
     // check wallet balance
     const wallet = await Wallet.findOne({ userId });
     if (!wallet) throw new ApiError(404, "Wallet not found");
-    if (wallet.balance < totalCost) {
-        throw new ApiError(400, `Insufficient balance. Need ₹${totalCost.toFixed(2)}, have ₹${wallet.balance.toFixed(2)}`);
+    if (wallet.availableBalance < totalCost) {
+        throw new ApiError(400, `Insufficient balance. Need ₹${totalCost.toFixed(2)}, have ₹${wallet.availableBalance.toFixed(2)}`);
     }
 
     // deduct from wallet
-    wallet.balance -= totalCost;
+    wallet.availableBalance -= totalCost;
     await wallet.save();
 
     // update portfolio
@@ -93,7 +93,7 @@ export const sellStock = asyncHandler(async (req, res) => {
 
     // credit wallet
     const wallet = await Wallet.findOne({ userId });
-    wallet.balance += totalEarned;
+    wallet.availableBalance += totalEarned;
     await wallet.save();
 
     // update portfolio
@@ -124,7 +124,7 @@ export const sellStock = asyncHandler(async (req, res) => {
         price: stock.currentPrice,
         totalEarned,
         profitLoss: profitLoss.toFixed(2),
-        walletBalance: wallet.balance
+        walletBalance: wallet.availableBalance
     }, `Successfully sold ${quantity} shares of ${symbol}`));
 });
 
