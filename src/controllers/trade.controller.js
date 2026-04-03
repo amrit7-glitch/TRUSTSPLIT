@@ -5,8 +5,9 @@ import { getStockPrice } from "../services/stock.service.js";
 import { Portfolio } from "../model/portfolio.model.js";
 import { Trade } from "../model/trade.model.js";
 import { Wallet } from "../model/wallet.model.js";
+import { addBlock } from "../services/blockchain.service.js";
 
-/* ============ BUY STOCK ============ */
+/* BUY STOCK */
 export const buyStock = asyncHandler(async (req, res) => {
     const { symbol, quantity } = req.body;
     const userId = req.user._id;
@@ -62,6 +63,16 @@ export const buyStock = asyncHandler(async (req, res) => {
         total: totalCost
     });
 
+    await addBlock({
+    userId: userId.toString(),
+    symbol,
+    companyName: stock.companyName,
+    type: "buy",
+    quantity,
+    price: stock.currentPrice,
+    total: totalCost
+});
+
     return res.status(200).json(new ApiResponse(200, {
         symbol,
         quantity,
@@ -71,7 +82,7 @@ export const buyStock = asyncHandler(async (req, res) => {
     }, `Successfully bought ${quantity} shares of ${symbol}`));
 });
 
-/* ============ SELL STOCK ============ */
+/*  SELL STOCK  */
 export const sellStock = asyncHandler(async (req, res) => {
     const { symbol, quantity } = req.body;
     const userId = req.user._id;
@@ -116,6 +127,16 @@ export const sellStock = asyncHandler(async (req, res) => {
         total: totalEarned
     });
 
+    await addBlock({
+    userId: userId.toString(),
+    symbol,
+    companyName: stock.companyName,
+    type: "sell",
+    quantity,
+    price: stock.currentPrice,
+    total: totalEarned
+});
+
     const profitLoss = (stock.currentPrice - holding.avgBuyPrice) * quantity;
 
     return res.status(200).json(new ApiResponse(200, {
@@ -128,13 +149,13 @@ export const sellStock = asyncHandler(async (req, res) => {
     }, `Successfully sold ${quantity} shares of ${symbol}`));
 });
 
-/* ============ GET PORTFOLIO ============ */
+/* GET PORTFOLIO */
 export const getPortfolio = asyncHandler(async (req, res) => {
     const userId = req.user._id;
 
     const holdings = await Portfolio.find({ userId });
 
-    // get current prices for all holdings
+    // get current prices for holdings
     const portfolioWithPrices = await Promise.all(
         holdings.map(async (holding) => {
             const stock = await getStockPrice(holding.symbol);
@@ -159,7 +180,7 @@ export const getPortfolio = asyncHandler(async (req, res) => {
     return res.status(200).json(new ApiResponse(200, portfolioWithPrices, "Portfolio fetched"));
 });
 
-/* ============ GET TRADE HISTORY ============ */
+/*  TRADE HISTORY  */
 export const getTradeHistory = asyncHandler(async (req, res) => {
     const userId = req.user._id;
     const trades = await Trade.find({ userId }).sort({ createdAt: -1 });

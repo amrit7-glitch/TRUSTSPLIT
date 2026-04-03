@@ -8,11 +8,11 @@ const portfolioSchema = new mongoose.Schema({
     },
     symbol: {
         type: String,
-        required: true  // e.g. "RELIANCE.NS"
+        required: true  
     },
     companyName: {
         type: String,
-        required: true  // e.g. "Reliance Industries"
+        required: true  
     },
     quantity: {
         type: Number,
@@ -31,7 +31,7 @@ const portfolioSchema = new mongoose.Schema({
     }
 }, { timestamps: true });
 
-// one user can hold one stock only — no duplicates
+// one user can hold one stock only 
 portfolioSchema.index({ userId: 1, symbol: 1 }, { unique: true });
 
 export const Portfolio = mongoose.model("Portfolio", portfolioSchema);

@@ -1,5 +1,8 @@
 import mongoose from "mongoose"
 import { DB_NAME } from "../constants"
+import { createRequire } from 'module';
+
+const require = createRequire(import.meta.url);
 
 const connectDb = async ()=>{
 try {

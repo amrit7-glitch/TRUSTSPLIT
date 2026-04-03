@@ -25,9 +25,7 @@ const transfer = async ({
      }
 
     const session = await mongoose.startSession(); // 
-   // session.startTransaction(); 
-   //  I will not permanently apply any DB change until you explicitly confirm.
-   // without this mongodb will not do the roll back transction when intrupped in between 
+  
 
 
 
@@ -82,13 +80,7 @@ const transfer = async ({
         await txn[0].save({ session });
  
       
-     /*
-     mark commit then only mongodb complete the transction 
-         permanently updates both balances
-     permanently stores transaction
-         If server crashed before this line → MongoDB automatically cancels everything.
-     No money lost.
-     */ 
+    
      await session.commitTransaction();
      
  

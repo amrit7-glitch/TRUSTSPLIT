@@ -8,7 +8,7 @@ const tradeSchema = new mongoose.Schema({
     },
     symbol: {
         type: String,
-        required: true  // e.g. "RELIANCE.NS"
+        required: true  
     },
     companyName: {
         type: String,
@@ -29,7 +29,7 @@ const tradeSchema = new mongoose.Schema({
     },
     total: {
         type: Number,
-        required: true  // quantity * price
+        required: true  
     }
 }, { timestamps: true });
 

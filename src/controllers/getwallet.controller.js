@@ -2,6 +2,9 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { Wallet } from "../model/wallet.model.js";
 import { ApiResponse } from "../utils/apiResponse.js";
 import { ApiError } from "../utils/apiError.js";
+import { createRequire } from 'module';
+
+const require = createRequire(import.meta.url);
 
 export const getWallet = asyncHandler(async (req, res) => {
     const wallet = await Wallet.findOne({ userId: req.user._id });

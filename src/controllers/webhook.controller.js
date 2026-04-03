@@ -9,7 +9,7 @@ export const stripeWebhook = asyncHandler(async (req, res) => {
   const signature = req.headers["stripe-signature"];
   let event;
 
-  /* ================= VERIFY STRIPE ================= */
+  /* VERIFY STRIPE  */
   try {
     event = stripe.webhooks.constructEvent(
       req.body,                        // VERY IMPORTANT
@@ -21,7 +21,7 @@ export const stripeWebhook = asyncHandler(async (req, res) => {
     return res.status(400).send(`Webhook Error: ${err.message}`);
   }
 
-  /* ============== HANDLE SUCCESSFUL PAYMENT ============== */
+  /* HANDLE SUCCESSFUL PAYMENT */
   if (event.type === "checkout.session.completed") {
 
     const session = event.data.object;
@@ -33,7 +33,7 @@ export const stripeWebhook = asyncHandler(async (req, res) => {
 
     try {
 
-      /* ----------- Extract metadata ----------- */
+      /*  Extract metadata  */
       const userId = session.metadata.userId;
       const amount = Number(session.metadata.amount);
 
@@ -41,28 +41,27 @@ export const stripeWebhook = asyncHandler(async (req, res) => {
         throw new Error("Metadata missing");
       }
 
-      /* ----------- Idempotency protection ----------- */
-      // Stripe retries webhook many times.
-      // If you don't check this, user will receive money multiple times.
+      
+     
 
       const existingTxn = await Transction.findOne({
         paymentId: session.payment_intent
       });
 
       if (existingTxn) {
-        console.log("⚠️ Duplicate webhook ignored");
+        console.log(" Duplicate webhook ignored");
         return res.json({ received: true });
       }
 
-      /* ----------- Get treasury wallet ----------- */
+      /*  Get treasury wallet  */
       const treasury = await Wallet.findOne({ type: "system" });
       if (!treasury) throw new Error("Treasury wallet missing");
 
-      /* ----------- Get user's wallet ----------- */
+      /* Get user's wallet */
       const userWallet = await Wallet.findOne({ userId });
       if (!userWallet) throw new Error("User wallet not found");
 
-      /* ----------- Transfer money ----------- */
+      /* Transfer money */
       await transfer({
         fromAccount: treasury._id,
         toAccount: userWallet._id,
