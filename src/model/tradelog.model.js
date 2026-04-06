@@ -10,13 +10,13 @@ const tradeLogSchema = new mongoose.Schema({
         default: Date.now
     },
     tradeData: {
-        userId:      String,
-        symbol:      String,
-        companyName: String,
-        type:        String,
-        quantity:    Number,
-        price:       Number,
-        total:       Number,
+        userId:      { type: String },
+        symbol:      { type: String },
+        companyName: { type: String },
+        type:        { type: String },
+        quantity:    { type: Number },
+        price:       { type: Number },
+        total:       { type: Number },
     },
     previousHash: {
         type: String,
