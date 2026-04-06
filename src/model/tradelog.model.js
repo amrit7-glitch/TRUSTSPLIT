@@ -18,6 +18,7 @@ const tradeLogSchema = new mongoose.Schema({
         price:       { type: Number },
         total:       { type: Number },
     },
+    
     previousHash: {
         type: String,
         required: true
